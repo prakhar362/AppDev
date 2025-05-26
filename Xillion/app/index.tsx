@@ -94,9 +94,7 @@ export default function Index() {
       <Text style={styles.recommendationsTitle}>Today's Recommendations</Text>
 
       <View style={styles.recommendContainer}>
-        
-      </View>
-      {/* Recommendations List - Scrollable */}
+        {/* Recommendations List - Scrollable */}
       <ScrollView style={styles.recommendationsList}>
         {recommendations.map((item, index) => (
           <LinearGradient
@@ -107,22 +105,35 @@ export default function Index() {
             end={{ x: 1, y: 0 }}
           >
             <View style={styles.recommendationItemContent}>
-              <View>
-                <Text style={styles.recommendationName}>{item.name}</Text>
-                <Text style={styles.recommendationBuy}>Buy: {item.buy}</Text>
-              </View>
-              <View style={styles.recommendationDetails}>
-                <View style={styles.recommendationDetailItem}>
-                   <Text style={styles.recommendationDetailTitle}>Stop Loss</Text>
-                   <Text style={styles.recommendationDetailValue}>{item.stopLoss}</Text>
-                </View>
-                 <View style={styles.recommendationDetailItem}>
-                   <Text style={styles.recommendationDetailTitle}>Target</Text>
-                   <Text style={styles.recommendationDetailValue}>{item.target}</Text>
-                </View>
-              </View>
-               <Text style={[styles.recommendationChange, { color: item.change.startsWith('+') ? '#00FF00' : '#FF0000' }]}>{item.change}</Text>
-            </View>
+    {/* Top Row: Name and Change % */}
+    <View style={styles.headerRow}>
+      <Text style={styles.recommendationName}>{item.name}</Text>
+      <Text
+        style={[
+          styles.recommendationChange,
+          { color: item.change.startsWith('+') ? '#00FF00' : '#FF0000' },
+        ]}
+      >
+        {item.change}
+      </Text>
+    </View>
+
+    {/* Bottom Row: Buy / Stop Loss / Target */}
+    <View style={styles.recommendationDetails}>
+      <View style={styles.recommendationDetailItem}>
+        <Text style={styles.recommendationDetailTitle}>Buy</Text>
+        <Text style={styles.recommendationDetailValue}>{item.buy}</Text>
+      </View>
+      <View style={styles.recommendationDetailItem}>
+        <Text style={styles.recommendationDetailTitle}>Stop Loss</Text>
+        <Text style={styles.recommendationDetailValue}>{item.stopLoss}</Text>
+      </View>
+      <View style={styles.recommendationDetailItem}>
+        <Text style={styles.recommendationDetailTitle}>Target</Text>
+        <Text style={styles.recommendationDetailValue}>{item.target}</Text>
+      </View>
+    </View>
+  </View>
           </LinearGradient>
         ))}
       </ScrollView>
@@ -131,6 +142,9 @@ export default function Index() {
       <Text style={styles.executionNote}>
         On executing this basket, buy orders along with stop loss and targets will be placed.
       </Text>
+        
+      </View>
+      
 
       
 
@@ -239,66 +253,81 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     textAlign:'center'
   },
-  recommendContainer:{
-    padding:10,
-    backgroundColor:'#c0c0c0',
-    borderRadius:20,
-    
-  },
-  recommendationsList: {
-    flex: 1,
-    padding: 16,
-  },
-  recommendationItem: {
-    height: 80,
-    borderRadius: 8,
-    marginBottom: 12,
-    justifyContent: "center",
-    padding: 10,
-    // Removed background color here as LinearGradient handles it
-  },
-  recommendationItemContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  recommendationDetails: {
-    flexDirection: "row",
-    alignItems: "center", // Aligned items to center
-  },
-  recommendationDetailItem: {
-      marginRight: 16,
-  },
-  recommendationName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  recommendationBuy: {
-    fontSize: 14,
-    color: "#eee",
-  },
-  recommendationDetailTitle: {
-     fontSize: 12,
-     color: "#eee",
-     marginBottom: 4,
-  },
-  recommendationDetailValue: {
-     fontSize: 14,
-     color: "#fff",
-  },
-  recommendationChange: {
-    fontSize: 16,
-    fontWeight: "bold",
-    // Color is set dynamically based on value
-  },
-  executionNote: {
-    color: "#ccc",
-    fontSize: 14,
-    textAlign: "center",
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
+  recommendContainer: {
+  flex: 1, // Takes available vertical space
+  backgroundColor: '#a1a1a1',
+  borderRadius: 20,
+  margin: 8,
+  paddingTop: 10,
+  overflow: 'hidden',
+},
+
+recommendationsList: {
+  paddingHorizontal: 0, // No horizontal padding
+  paddingVertical: 10,
+  maxHeight: 350, // You can tweak this height
+},
+
+recommendationItem: {
+  borderRadius: 12,
+  marginHorizontal: 10,
+  marginBottom: 8,
+  padding: 10,
+},
+
+recommendationItemContent: {
+  flexDirection: "column",
+},
+
+headerRow: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: 8,
+},
+
+recommendationName: {
+  fontSize: 18,
+  fontWeight: "bold",
+  color: "#fff",
+},
+
+recommendationChange: {
+  fontSize: 20,
+  fontWeight: "normal",
+},
+
+recommendationDetails: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+},
+
+recommendationDetailItem: {
+  flex: 1,
+  alignItems: "center",
+},
+
+recommendationDetailTitle: {
+  fontSize: 12,
+  color: "#eee",
+  marginBottom: 4,
+},
+
+recommendationDetailValue: {
+  fontSize: 14,
+  color: "#fff",
+  fontWeight: "bold",
+},
+
+executionNote: {
+  color: "#fff",
+  fontSize: 13,
+  textAlign: "center",
+  marginTop: 10,
+  marginBottom: 16,
+  marginHorizontal: 10,
+},
+
   executeButtonContainer: {
     padding: 16,
   },
