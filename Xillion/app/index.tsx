@@ -1,16 +1,14 @@
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, ColorValue, Alert } from "react-native";
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, ColorValue, Alert, Platform } from "react-native";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeButton } from "react-native-expo-swipe-button";
-
-
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
   const gradientColorsUpper: [ColorValue, ColorValue] = ["#C525FF", "#391EDC"];
   const gradientColorsRecommendations: [ColorValue, ColorValue] = ["#C426FF", "#391FDC"];
-
 
   // Dummy data for recommendations
   const recommendations = [
@@ -38,15 +36,13 @@ export default function Index() {
     // Add more recommendation objects here
   ];
 
-
   const handleExecute = () => {
     // This function will be called when the swipe is complete
     Alert.alert("Execute", "Executing trades...");
   };
 
-
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: 60 + insets.bottom }]}>
      
       {/* Upper Section with Gradient */}
       <LinearGradient
@@ -86,7 +82,7 @@ export default function Index() {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton}>
             {/* Portfolio Icon */}
-            <MaterialCommunityIcons name="folder" size={18} color="#fff" />
+            <MaterialCommunityIcons name="folder-multiple" size={18} color="#fff" />
             <Text style={styles.actionButtonText}>Portfolio</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton}>
@@ -170,15 +166,9 @@ export default function Index() {
            }
            height={50}
            borderRadius={50}
-  circleSize={60}
+           circleSize={60}
         />
       </View>
-
-
-      {/* Implement Bottom Tab Navigator here */}
-      <View style={styles.bottomNavBarPlaceholder} />
-
-
     </View>
   );
 }
@@ -204,11 +194,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color:"white"
   },
-
-
-
-
-
 
   portfolioSection:{
     alignItems:"center"
@@ -365,13 +350,9 @@ executionNote: {
      backgroundColor: "#D3D3D3", // Light gray background
      borderRadius: 25,
   },
-  swipeButtonTitle: { // Added style for the swipe button title
+  swipeButtonTitle: {
       fontSize: 20,
       fontWeight: "semibold",
       color: "#000",
-  },
-  bottomNavBarPlaceholder: {
-    height: 60,
-    backgroundColor: "#21083a", // Placeholder for bottom nav bar
   },
 });
