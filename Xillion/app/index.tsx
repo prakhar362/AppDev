@@ -3,12 +3,14 @@ import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeButton } from "react-native-expo-swipe-button";
-// You might need to install expo-linear-gradient if you are using Expo, or react-native-linear-gradient if not.
-// For simplicity, I will use placeholder Views for gradients for now and you can replace them with actual gradient components.
+
+
+
 
 export default function Index() {
   const gradientColorsUpper: [ColorValue, ColorValue] = ["#C525FF", "#391EDC"];
   const gradientColorsRecommendations: [ColorValue, ColorValue] = ["#C426FF", "#391FDC"];
+
 
   // Dummy data for recommendations
   const recommendations = [
@@ -36,15 +38,16 @@ export default function Index() {
     // Add more recommendation objects here
   ];
 
+
   const handleExecute = () => {
     // This function will be called when the swipe is complete
     Alert.alert("Execute", "Executing trades...");
-    // You can add your trade execution logic here
   };
+
 
   return (
     <View style={styles.container}>
-      
+     
       {/* Upper Section with Gradient */}
       <LinearGradient
         colors={gradientColorsUpper}
@@ -60,7 +63,7 @@ export default function Index() {
           {/* Notifications Icon */}
           <Feather name="bell" size={24} color="#fff" />
         </View>
-        
+       
         {/*Portfolio section */}
         <View style={styles.portfolioSection}>
           <Text style={styles.portfolioTitle}>Current Portfolio</Text>
@@ -70,11 +73,14 @@ export default function Index() {
            <Feather name="refresh-ccw" size={18} color="#fff" />
         </View>
 
+
         <Text style={styles.unusedFundsTitle}>Unused Funds</Text>
         <Text style={styles.unusedFundsValue}>₹1,18,261</Text>
         </View>
 
+
       </LinearGradient>
+
 
       {/* Action Buttons */}
         <View style={styles.actionButtonsContainer}>
@@ -90,8 +96,10 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
+
       {/* Today's Recommendations Section */}
       <Text style={styles.recommendationsTitle}>Today's Recommendations</Text>
+
 
       <View style={styles.recommendContainer}>
         {/* Recommendations List - Scrollable */}
@@ -118,6 +126,7 @@ export default function Index() {
       </Text>
     </View>
 
+
     {/* Bottom Row: Buy / Stop Loss / Target */}
     <View style={styles.recommendationDetails}>
       <View style={styles.recommendationDetailItem}>
@@ -138,15 +147,15 @@ export default function Index() {
         ))}
       </ScrollView>
 
+
       {/* Execution Note */}
       <Text style={styles.executionNote}>
         On executing this basket, buy orders along with stop loss and targets will be placed.
       </Text>
-        
+       
       </View>
-      
+     
 
-      
 
       {/* Execute Button */}
       <View style={styles.executeButtonContainer}>
@@ -157,20 +166,23 @@ export default function Index() {
            titleStyle={styles.swipeButtonTitle}
            circleBackgroundColor="#fff"
            Icon={
-            <MaterialCommunityIcons name="lightning-bolt" size={24} color="#000" />
+            <MaterialCommunityIcons name="lightning-bolt" size={30} color="#000" />
            }
            height={50}
-           borderRadius={25}
+           borderRadius={50}
+  circleSize={60}
         />
       </View>
 
-      {/* Bottom Navigation Bar Placeholder */}
+
       {/* Implement Bottom Tab Navigator here */}
       <View style={styles.bottomNavBarPlaceholder} />
+
 
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -178,7 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#21083a", // Dark theme background
   },
   upperSection: {
-    padding: 12,
+    padding: 30,
     paddingBottom:40,
   },
   header: {
@@ -192,6 +204,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color:"white"
   },
+
+
+
 
 
 
@@ -245,6 +260,7 @@ const styles = StyleSheet.create({
 
 
 
+
   recommendationsTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -262,11 +278,13 @@ const styles = StyleSheet.create({
   overflow: 'hidden',
 },
 
+
 recommendationsList: {
   paddingHorizontal: 0, // No horizontal padding
   paddingVertical: 10,
   maxHeight: 350, // You can tweak this height
 },
+
 
 recommendationItem: {
   borderRadius: 12,
@@ -275,9 +293,11 @@ recommendationItem: {
   padding: 10,
 },
 
+
 recommendationItemContent: {
   flexDirection: "column",
 },
+
 
 headerRow: {
   flexDirection: "row",
@@ -286,26 +306,31 @@ headerRow: {
   marginBottom: 8,
 },
 
+
 recommendationName: {
   fontSize: 18,
   fontWeight: "bold",
   color: "#fff",
 },
 
+
 recommendationChange: {
   fontSize: 20,
   fontWeight: "normal",
 },
+
 
 recommendationDetails: {
   flexDirection: "row",
   justifyContent: "space-between",
 },
 
+
 recommendationDetailItem: {
   flex: 1,
   alignItems: "center",
 },
+
 
 recommendationDetailTitle: {
   fontSize: 12,
@@ -313,11 +338,13 @@ recommendationDetailTitle: {
   marginBottom: 4,
 },
 
+
 recommendationDetailValue: {
   fontSize: 14,
   color: "#fff",
   fontWeight: "bold",
 },
+
 
 executionNote: {
   color: "#fff",
@@ -328,18 +355,20 @@ executionNote: {
   marginHorizontal: 10,
 },
 
+
   executeButtonContainer: {
     padding: 6,
   },
+ 
   swipeButtonContainer: { // Added style for the swipe button container
-     width: "70%",
+     width: "100%",
      backgroundColor: "#D3D3D3", // Light gray background
      borderRadius: 25,
   },
   swipeButtonTitle: { // Added style for the swipe button title
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "#000", // Black text color
+      fontSize: 20,
+      fontWeight: "semibold",
+      color: "#000",
   },
   bottomNavBarPlaceholder: {
     height: 60,
