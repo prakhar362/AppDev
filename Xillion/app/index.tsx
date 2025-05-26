@@ -175,7 +175,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // Dark theme background
+    backgroundColor: "#21083a", // Dark theme background
   },
   upperSection: {
     padding: 12,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2e3240", // Darker button background
+    backgroundColor: "#080139", // Darker button background
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 12,
@@ -329,10 +329,10 @@ executionNote: {
 },
 
   executeButtonContainer: {
-    padding: 16,
+    padding: 6,
   },
   swipeButtonContainer: { // Added style for the swipe button container
-     width: "100%",
+     width: "70%",
      backgroundColor: "#D3D3D3", // Light gray background
      borderRadius: 25,
   },
@@ -343,6 +343,6 @@ executionNote: {
   },
   bottomNavBarPlaceholder: {
     height: 60,
-    backgroundColor: "#222", // Placeholder for bottom nav bar
+    backgroundColor: "#21083a", // Placeholder for bottom nav bar
   },
 });
