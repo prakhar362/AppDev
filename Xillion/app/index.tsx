@@ -96,12 +96,12 @@ export default function Index() {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.actionButton}>
             {/* Portfolio Icon */}
-            <MaterialCommunityIcons name="folder-multiple" size={18} color="#fff" />
+            <MaterialCommunityIcons name="folder-multiple" size={22} color="#fff" />
             <Text style={styles.actionButtonText}>Portfolio</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton}>
              {/* Ask AI Icon */}
-            <MaterialCommunityIcons name="message-processing" size={18} color="#fff" />
+            <MaterialCommunityIcons name="message-processing" size={22} color="#fff" />
             <Text style={styles.actionButtonText}>Ask AI</Text>
           </TouchableOpacity>
         </View>
@@ -191,7 +191,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#21083a", // Dark theme background
+    backgroundColor: "#210b40", // Dark theme background
   },
   upperSection: {
     padding: 30,
@@ -246,13 +246,14 @@ const styles = StyleSheet.create({
   actionButtonsContainer: {
     flexDirection: "row",
     marginTop: -10,
-    justifyContent: "space-around",
+    justifyContent: "center",
     width: "100%", // Ensure buttons spread out if needed
   },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#080139", // Darker button background
+    marginHorizontal:10,
+    backgroundColor: "#07022d", // Darker button background
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 12,
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
   actionButtonText: {
     color: "#fff",
     fontSize: 16,
+    fontWeight:'bold',
     marginLeft: 8, // Added margin
   },
 
@@ -276,7 +278,7 @@ const styles = StyleSheet.create({
   },
   recommendContainer: {
   flex: 1, // Takes available vertical space
-  backgroundColor: '#a1a1a1',
+  backgroundColor: '#777777',
   borderRadius: 20,
   margin: 8,
   paddingTop: 10,
@@ -353,8 +355,9 @@ recommendationDetailValue: {
 
 executionNote: {
   color: "#fff",
-  fontSize: 13,
+  fontSize: 16,
   textAlign: "center",
+  fontWeight:'semibold',
   marginTop: 10,
   marginBottom: 16,
   marginHorizontal: 10,
@@ -367,7 +370,7 @@ executionNote: {
  
   swipeButtonContainer: { // Added style for the swipe button container
      width: "100%",
-     backgroundColor: "#D3D3D3", // Light gray background
+     backgroundColor: "#777777", // Light gray background
      borderRadius: 25,
   },
   swipeButtonTitle: {
