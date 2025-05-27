@@ -11,12 +11,14 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#21083a",
-          borderTopWidth: 1,
+          backgroundColor: "#000000",
+          borderTopWidth:2,
+          borderCurve:2,
+          borderRadius:10,
           borderTopColor: "white",
           elevation: 0,
           height: 60 + insets.bottom,
-          paddingBottom: insets.bottom,
+          paddingTop:10,
           position: 'absolute',
           bottom: 0,
           left: 0,
@@ -34,7 +36,7 @@ export default function Layout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="home" size={size} color="white" />
+            <Feather name="home" size={size+3} color="white" />
           ),
         }}
       />
@@ -43,7 +45,16 @@ export default function Layout() {
         options={{
           title: "History",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="clock" size={size} color="white" />
+            <Feather name="clock" size={size+3} color="white" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="user" size={size+3} color="white" />
           ),
         }}
       />
