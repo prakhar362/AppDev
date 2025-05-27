@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, ScrollView, Platform, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Platform, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
@@ -274,7 +274,13 @@ export default function History() {
                 </View>
                 <View style={styles.summaryItem}>
                   <Text style={styles.summaryLabel}>Avg return ⓘ</Text>
-                  <Text style={styles.summaryValueGreen}>↗7.74%</Text>
+                  <View style={styles.returnValueContainer}>
+                    <Text style={styles.summaryValueGreen}>7.74%</Text>
+                    <Image 
+                      source={require('../assets/images/stockup.gif')}
+                      style={styles.stockAnimation}
+                    />
+                  </View>
                 </View>
                 <View style={styles.hitRateContainer}>
                   <Text style={styles.hitRateValue}>83%</Text>
@@ -347,11 +353,18 @@ export default function History() {
                    
                     <View style={styles.rightSection}>
                       <View style={styles.profitContainer}>
-                        <Feather
-                          name={item.profitPercentage.startsWith('+') ? 'trending-up' : 'trending-down'}
-                          size={16}
-                          color={item.profitPercentage.startsWith('+') ? '#4CAF50' : '#F44336'}
-                        />
+                        {item.profitPercentage.startsWith('+') ? (
+                          <Feather
+                            name="trending-up"
+                            size={16}
+                            color="#4CAF50"
+                          />
+                        ) : (
+                          <Image 
+                            source={require('../assets/images/downarrow.gif')}
+                            style={styles.stockMovementAnimation}
+                          />
+                        )}
                         <Text style={[
                           styles.profitPercentage,
                           { color: item.profitPercentage.startsWith('+') ? '#4CAF50' : '#F44336' }
@@ -661,6 +674,19 @@ const styles = StyleSheet.create({
   tradeDate: {
     fontSize: 12,
     color: '#999',
+  },
+  returnValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  stockAnimation: {
+    width: 40,
+    height: 40,
+  },
+  stockMovementAnimation: {
+    width: 24,
+    height: 24,
   },
 });
 
