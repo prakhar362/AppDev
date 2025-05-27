@@ -5,6 +5,7 @@ import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { useState, useMemo, useEffect } from 'react';
 import AnimatedNumbers from '../components/AnimatedNumbers';
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 // Dummy data structure for Trade History
 const tradeHistoryData = [
@@ -230,6 +231,15 @@ export default function History() {
     setAnimationKey(prev => prev + 1);
   }, []);
 
+  const onSwipeLeft = () => {
+    navigation.goBack();
+  };
+
+  const config = {
+    velocityThreshold: 0.2,
+    directionalOffsetThreshold: 50
+  };
+
   const uniqueCategories = useMemo(() => {
     const categories = tradeHistoryData.map(item => item.category);
     return ['All', ...Array.from(new Set(categories))];
@@ -243,152 +253,158 @@ export default function History() {
   }, [selectedCategory]);
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-      <LinearGradient
-        colors={["#C426FF", "#391FDC"]}
-        style={[styles.header, { paddingTop: insets.top + 10 }]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Feather name="arrow-left" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Trade History</Text>
-      </LinearGradient>
+    <GestureRecognizer
+      onSwipeLeft={onSwipeLeft}
+      config={config}
+      style={{ flex: 1 }}
+    >
+      <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+        <LinearGradient
+          colors={["#C426FF", "#391FDC"]}
+          style={[styles.header, { paddingTop: insets.top + 10 }]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Feather name="arrow-left" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Trade History</Text>
+        </LinearGradient>
 
-      <View style={styles.mainContent}>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>POSITIONAL TRADE HISTORY</Text>
-          <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Avg duration</Text>
-              <Text style={styles.summaryValue}>59 days</Text>
-            </View>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Avg return ⓘ</Text>
-              <View style={styles.returnValueContainer}>
-                <Text style={styles.summaryValueGreen}>7.74%</Text>
-                <Image 
-                  source={require('../assets/images/stockup.gif')}
-                  style={styles.stockAnimation}
+        <View style={styles.mainContent}>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryTitle}>POSITIONAL TRADE HISTORY</Text>
+            <View style={styles.summaryRow}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Avg duration</Text>
+                <Text style={styles.summaryValue}>59 days</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Avg return ⓘ</Text>
+                <View style={styles.returnValueContainer}>
+                  <Text style={styles.summaryValueGreen}>7.74%</Text>
+                  <Image 
+                    source={require('../assets/images/stockup.gif')}
+                    style={styles.stockAnimation}
+                  />
+                </View>
+              </View>
+              <View style={styles.hitRateContainer}>
+                <AnimatedNumbers 
+                  key={`hitRateAnimation-${animationKey}`}
+                  value={83} 
+                  duration={4000}
+                  style={styles.hitRateValue}
                 />
+                <Text style={styles.hitRateLabel}>Hit Rate</Text>
               </View>
             </View>
-            <View style={styles.hitRateContainer}>
-              <AnimatedNumbers 
-                key={`hitRateAnimation-${animationKey}`}
-                value={83} 
-                duration={4000}
-                style={styles.hitRateValue}
-              />
-              <Text style={styles.hitRateLabel}>Hit Rate</Text>
+          </View>
+
+          <View style={styles.filterSection}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoryFilterContainer}
+            >
+              {uniqueCategories.map(category => (
+                <TouchableOpacity
+                  key={category}
+                  style={[
+                    styles.categoryButton,
+                    selectedCategory === category && styles.activeCategoryButton
+                  ]}
+                  onPress={() => setSelectedCategory(category)}
+                >
+                  <Text style={[
+                    styles.categoryButtonText,
+                    selectedCategory === category && styles.activeCategoryButtonText
+                  ]}>
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            <View style={styles.tradesInfoContainer}>
+              <View style={styles.tradesCountContainer}>
+                <MaterialCommunityIcons name="circle" size={8} color="#4CAF50" />
+                <Text style={styles.tradesCountText}>All positional Liquide trades</Text>
+              </View>
+              <View style={styles.rightInfo}>
+                <Text style={styles.tradesCount}>{filteredTrades.length} trades</Text>
+                <TouchableOpacity>
+                  <Text style={styles.sortText}>Sort</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.filterSection}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoryFilterContainer}
+          <ScrollView 
+            style={styles.historyList}
+            contentContainerStyle={styles.historyListContent}
+            showsVerticalScrollIndicator={true}
           >
-            {uniqueCategories.map(category => (
-              <TouchableOpacity
-                key={category}
-                style={[
-                  styles.categoryButton,
-                  selectedCategory === category && styles.activeCategoryButton
-                ]}
-                onPress={() => setSelectedCategory(category)}
-              >
-                <Text style={[
-                  styles.categoryButtonText,
-                  selectedCategory === category && styles.activeCategoryButtonText
-                ]}>
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          <View style={styles.tradesInfoContainer}>
-            <View style={styles.tradesCountContainer}>
-              <MaterialCommunityIcons name="circle" size={8} color="#4CAF50" />
-              <Text style={styles.tradesCountText}>All positional Liquide trades</Text>
-            </View>
-            <View style={styles.rightInfo}>
-              <Text style={styles.tradesCount}>{filteredTrades.length} trades</Text>
-              <TouchableOpacity>
-                <Text style={styles.sortText}>Sort</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        <ScrollView 
-          style={styles.historyList}
-          contentContainerStyle={styles.historyListContent}
-          showsVerticalScrollIndicator={true}
-        >
-          {filteredTrades.map((item, index) => (
-            <View key={index} style={styles.tradeCard}>
-              {item.targetHitDate && (
-                <View style={styles.targetHitBadge}>
-                  <Text style={styles.targetHitText}>Target Hit: {item.targetHitDate}</Text>
-                </View>
-              )}
-             
-              <View style={styles.cardContent}>
-                <View style={styles.leftSection}>
-                  <View style={styles.stockIcon}>
-                    <Text style={styles.stockInitial}>{item.initial}</Text>
+            {filteredTrades.map((item, index) => (
+              <View key={index} style={styles.tradeCard}>
+                {item.targetHitDate && (
+                  <View style={styles.targetHitBadge}>
+                    <Text style={styles.targetHitText}>Target Hit: {item.targetHitDate}</Text>
                   </View>
-                  <View style={styles.stockInfo}>
-                    <Text style={styles.stockName}>{item.stockName}</Text>
-                    <Text style={styles.companyName}>{item.companyName}</Text>
+                )}
+               
+                <View style={styles.cardContent}>
+                  <View style={styles.leftSection}>
+                    <View style={styles.stockIcon}>
+                      <Text style={styles.stockInitial}>{item.initial}</Text>
+                    </View>
+                    <View style={styles.stockInfo}>
+                      <Text style={styles.stockName}>{item.stockName}</Text>
+                      <Text style={styles.companyName}>{item.companyName}</Text>
+                    </View>
+                  </View>
+                 
+                  <View style={styles.rightSection}>
+                    <View style={styles.profitContainer}>
+                      {item.profitPercentage.startsWith('+') ? (
+                        <Feather
+                          name="trending-up"
+                          size={16}
+                          color="#4CAF50"
+                        />
+                      ) : (
+                        <Image 
+                          source={require('../assets/images/downarrow.gif')}
+                          style={styles.stockMovementAnimation}
+                        />
+                      )}
+                      <Text style={[
+                        styles.profitPercentage,
+                        { color: item.profitPercentage.startsWith('+') ? '#4CAF50' : '#F44336' }
+                      ]}>
+                        {item.profitPercentage}
+                      </Text>
+                    </View>
+                    <Text style={styles.returnLabel}>Return</Text>
+                    <View style={styles.liquideTag}>
+                      <Text style={styles.liquideText}>Liquide (SEBI RA)</Text>
+                    </View>
                   </View>
                 </View>
                
-                <View style={styles.rightSection}>
-                  <View style={styles.profitContainer}>
-                    {item.profitPercentage.startsWith('+') ? (
-                      <Feather
-                        name="trending-up"
-                        size={16}
-                        color="#4CAF50"
-                      />
-                    ) : (
-                      <Image 
-                        source={require('../assets/images/downarrow.gif')}
-                        style={styles.stockMovementAnimation}
-                      />
-                    )}
-                    <Text style={[
-                      styles.profitPercentage,
-                      { color: item.profitPercentage.startsWith('+') ? '#4CAF50' : '#F44336' }
-                    ]}>
-                      {item.profitPercentage}
-                    </Text>
+                <View style={styles.cardFooter}>
+                  <View style={styles.tradeTypeContainer}>
+                    <Feather name="clock" size={14} color="#666" />
+                    <Text style={styles.tradeType}>{item.tradeType}</Text>
                   </View>
-                  <Text style={styles.returnLabel}>Return</Text>
-                  <View style={styles.liquideTag}>
-                    <Text style={styles.liquideText}>Liquide (SEBI RA)</Text>
-                  </View>
+                  <Text style={styles.tradeDate}>{item.tradeDate}</Text>
                 </View>
               </View>
-             
-              <View style={styles.cardFooter}>
-                <View style={styles.tradeTypeContainer}>
-                  <Feather name="clock" size={14} color="#666" />
-                  <Text style={styles.tradeType}>{item.tradeType}</Text>
-                </View>
-                <Text style={styles.tradeDate}>{item.tradeDate}</Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
       </View>
-    </View>
+    </GestureRecognizer>
   );
 }
 
