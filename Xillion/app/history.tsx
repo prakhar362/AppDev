@@ -295,7 +295,7 @@ export default function History() {
                     duration={4000}
                     style={styles.hitRateValue}
                   />
-                  <Text style={styles.hitRateLabel}>hit rate</Text>
+                  <Text style={styles.hitRateLabel}>Hit Rate</Text>
                 </View>
               </View>
             </View>
