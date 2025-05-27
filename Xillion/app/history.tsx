@@ -4,7 +4,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { GestureHandlerRootView, PanGestureHandler, State, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import AnimatedNumbers from '../components/AnimatedNumbers';
 
 // Dummy data structure for Trade History
 const tradeHistoryData = [
@@ -225,6 +226,11 @@ export default function History() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [animationKey, setAnimationKey] = useState(0);
+
+  useEffect(() => {
+    setAnimationKey(prev => prev + 1);
+  }, []);
 
   const panGesture = Gesture.Pan()
     .onEnd((event) => {
@@ -283,7 +289,12 @@ export default function History() {
                   </View>
                 </View>
                 <View style={styles.hitRateContainer}>
-                  <Text style={styles.hitRateValue}>83%</Text>
+                  <AnimatedNumbers 
+                    key={`hitRateAnimation-${animationKey}`}
+                    value={83} 
+                    duration={4000}
+                    style={styles.hitRateValue}
+                  />
                   <Text style={styles.hitRateLabel}>hit rate</Text>
                 </View>
               </View>
