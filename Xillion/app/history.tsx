@@ -236,8 +236,9 @@ export default function History() {
   };
 
   const config = {
-    velocityThreshold: 0.2,
-    directionalOffsetThreshold: 50
+    velocityThreshold: 0.05,
+     directionalOffsetThreshold: 20,
+     gestureIsClickThreshold: 3
   };
 
   const uniqueCategories = useMemo(() => {
@@ -306,6 +307,8 @@ export default function History() {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.categoryFilterContainer}
+              scrollEnabled={true}
+              nestedScrollEnabled={true}
             >
               {uniqueCategories.map(category => (
                 <TouchableOpacity
@@ -344,6 +347,8 @@ export default function History() {
             style={styles.historyList}
             contentContainerStyle={styles.historyListContent}
             showsVerticalScrollIndicator={true}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
           >
             {filteredTrades.map((item, index) => (
               <View key={index} style={styles.tradeCard}>
@@ -423,7 +428,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
     left: 20,
-    top: Platform.OS === 'ios' ? 60 : 30,
+    top: Platform.OS === 'ios' ? 70 : 40,
     zIndex: 1,
   },
   headerTitle: {
