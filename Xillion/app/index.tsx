@@ -66,7 +66,7 @@ export default function Index() {
         <View style={styles.portfolioValueContainer}>
            <Text style={styles.portfolioValue}>₹12,78,653</Text>
            {/* Refresh Icon */}
-           <Feather name="refresh-ccw" size={18} color="#fff" />
+           <Feather name="refresh-ccw" size={18} style={styles.refresh} color="#fff" />
         </View>
 
 
@@ -209,10 +209,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   portfolioValue: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: "bold",
     color: "#fff",
-    marginRight: 8,
+    paddingLeft:5,
+    marginLeft:10,
+  },
+  refresh:{
+  marginTop:10,
+  marginLeft:5,
   },
   unusedFundsTitle: {
     fontSize: 14,
@@ -222,6 +227,7 @@ const styles = StyleSheet.create({
   unusedFundsValue: {
     fontSize: 18,
     color: "#fff",
+    fontWeight:'bold',
   },
   actionButtonsContainer: {
     flexDirection: "row",
