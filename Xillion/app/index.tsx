@@ -33,6 +33,20 @@ export default function Index() {
       target: "₹852",
       change: "+8.3%",
     },
+    {
+      name: "ADANI POWER",
+      buy: "₹775-786",
+      stopLoss: "₹698",
+      target: "₹852",
+      change: "+10.3%",
+    },
+    {
+      name: "APPLE INC.",
+      buy: "₹775-786",
+      stopLoss: "₹698",
+      target: "₹852",
+      change: "+7.3%",
+    },
     // Add more recommendation objects here
   ];
 
