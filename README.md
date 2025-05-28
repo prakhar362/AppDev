@@ -60,4 +60,6 @@ https://drive.google.com/drive/folders/1IXM5ijeFSTN9wR-W1qDyDGOywDs6BHy7?usp=sha
 I adopted a sophisticated dark theme, accented with colors that enhance readability and reduce eye strain. The color scheme was selected to reflect the aesthetics of modern trading apps while maintaining a strong visual hierarchy and consistency. I also referred to several trading app designs for inspiration, incorporating animations and looking for quality visuals, GIFs, and appealing designs that enhance user experience and showcase my UI skills.
 
 ---
-
+## 📱 Testing Purposes EAS Android Build:
+- Download the tar.gz file and then after extracting download then app-release.apk file: https://expo.dev/accounts/prakhar362/projects/Xillion/builds/f14106e5-e562-45d4-843b-e07e46f962c9
+- Or Simply download the APK File from this drive link: https://drive.google.com/file/d/1C0JUuHqLxHv9DJCLcAhpG5sTIBcoKuvN/view?usp=sharing
