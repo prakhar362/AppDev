@@ -61,5 +61,5 @@ I adopted a sophisticated dark theme, accented with colors that enhance readabil
 
 ---
 ## 📱 Testing Purposes EAS Android Build:
-- Download the tar.gz file and then after extracting download then app-release.apk file: https://expo.dev/accounts/prakhar362/projects/Xillion/builds/f14106e5-e562-45d4-843b-e07e46f962c9
+- Download the apk file from this Link: https://expo.dev/accounts/prakhar362/projects/Xillion/builds/2ff8905b-5425-4ad0-afb7-d97dd30b9cbc
 - Or Simply download the APK File from this drive link: https://drive.google.com/file/d/1C0JUuHqLxHv9DJCLcAhpG5sTIBcoKuvN/view?usp=sharing
