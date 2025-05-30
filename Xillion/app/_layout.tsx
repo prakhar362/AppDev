@@ -58,6 +58,15 @@ export default function Layout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: "Chat AI",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="message-circle" size={size+3} color="white" />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

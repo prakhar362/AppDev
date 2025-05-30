@@ -3,10 +3,12 @@ import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeButton } from "react-native-expo-swipe-button";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const gradientColorsUpper: [ColorValue, ColorValue] = ["#C525FF", "#391EDC"];
   const gradientColorsRecommendations: [ColorValue, ColorValue] = ["#C426FF", "#391FDC"];
 
@@ -99,7 +101,7 @@ export default function Index() {
             <MaterialCommunityIcons name="folder-multiple" size={22} color="#fff" />
             <Text style={styles.actionButtonText}>Portfolio</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push("./chat")}>
              {/* Ask AI Icon */}
             <MaterialCommunityIcons name="message-processing" size={22} color="#fff" />
             <Text style={styles.actionButtonText}>Ask AI</Text>
