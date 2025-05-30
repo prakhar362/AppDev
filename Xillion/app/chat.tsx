@@ -90,6 +90,7 @@ export default function Chat() {
             "How does Trump tariff's affect Indian markets?",
             "Impact of UK-India FTA deal",
           ].map((text, index) => (
+            
             <TouchableOpacity key={index} style={styles.suggestionButton}>
               <Text style={styles.suggestionText}>{text}</Text>
             </TouchableOpacity>

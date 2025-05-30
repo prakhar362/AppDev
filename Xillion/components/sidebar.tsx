@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   newChatText: {
-    color: '#999',
+    color: '#eee',
     fontSize: 16,
   },
   divider: {
