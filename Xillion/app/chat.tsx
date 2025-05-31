@@ -9,6 +9,7 @@ import {
   StatusBar,
   TextInput,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import {
   MaterialIcons,
@@ -16,6 +17,7 @@ import {
   FontAwesome5,
   Feather,
 } from "@expo/vector-icons";
+import Markdown from 'react-native-markdown-display';
 import Sidebar from "../components/sidebar";
 import { getGeminiResponse } from "../lib/gemini"; // ⬅️ Gemini API helper
 
@@ -62,34 +64,90 @@ export default function Chat() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1, backgroundColor: "#fff" }}
+    >
       {sidebarVisible && <Sidebar onClose={() => setSidebarVisible(false)} />}
 
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* Top row */}
-        <View style={styles.topRow}>
-          <TouchableOpacity onPress={() => setSidebarVisible(true)} style={styles.iconBox}>
-            <Feather name="sidebar" size={20} color="#000" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.newChatButton}>
-            <Feather name="plus" size={16} color="#000" />
-            <Text style={styles.newChatText}>New Chat</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.mainContainer}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Top row */}
+          <View style={styles.topRow}>
+            <TouchableOpacity onPress={() => setSidebarVisible(true)} style={styles.iconBox}>
+              <Feather name="sidebar" size={20} color="#000" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.newChatButton}>
+              <Feather name="plus" size={16} color="#000" />
+              <Text style={styles.newChatText}>New Chat</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Heading */}
-        <Text style={styles.title}>
-          Need real-time analysis to make{"\n"}informed decisions?
-        </Text>
+          {/* Heading */}
+          <Text style={styles.title}>
+            Need real-time analysis to make{"\n"}informed decisions?
+          </Text>
 
-        {/* Ask card */}
-        <View style={styles.card}>
+          {/* Chat bubbles */}
+          {conversation.map((msg, idx) => (
+            <View
+              key={idx}
+              style={[
+                styles.chatBubble,
+                msg.role === "user" ? styles.userBubble : styles.aiBubble,
+              ]}
+            >
+              {msg.role === "ai" && (
+                <View style={styles.sparkle}>
+                  <FontAwesome5 name="magic" size={12} color="#555" />
+                </View>
+              )}
+              <Text style={[
+                styles.chatText,
+                msg.role === "user" ? styles.userChatText : styles.aiChatText
+              ]}>
+                {msg.text}
+              </Text>
+            </View>
+          ))}
+
+          {isLoading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color="#C426FF" />
+              <Text style={styles.loadingText}>Thinking...</Text>
+            </View>
+          )}
+
+          {/* Suggestions */}
+          {showSuggestions && (
+            <View style={styles.suggestions}>
+              {[
+                "Analyse KPIGREEN stock fundamentally & technically",
+                "How does Trump tariff's affect Indian markets?",
+                "Impact of UK-India FTA deal",
+              ].map((text, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.suggestionButton}
+                  onPress={() => handleSuggestionPress(text)}
+                >
+                  <Text style={styles.suggestionText}>{text}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </ScrollView>
+
+        {/* Input Card */}
+        <View style={styles.inputCard}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>Ask Xillion AI!</Text>
             <Entypo name="chevron-up" size={20} color="white" />
           </View>
 
-          {/* Input */}
           <TextInput
             style={styles.input}
             placeholder="Type your question here..."
@@ -100,82 +158,35 @@ export default function Chat() {
             returnKeyType="send"
           />
 
-          {/* Actions */}
           <View style={styles.actions}>
             <View style={styles.actionItem}>
-              <MaterialIcons name="attach-file" size={16} color="white" />
+              <MaterialIcons name="attach-file" size={18} color="white" />
               <Text style={styles.actionText}>Attachment</Text>
             </View>
             <View style={styles.actionItem}>
-              <FontAwesome5 name="brain" size={16} color="white" />
+              <FontAwesome5 name="brain" size={18} color="white" />
               <Text style={styles.actionText}>Reason</Text>
             </View>
             <View style={styles.actionItem}>
-              <MaterialIcons name="insert-chart" size={16} color="white" />
+              <MaterialIcons name="insert-chart" size={18} color="white" />
               <Text style={styles.actionText}>Report</Text>
             </View>
           </View>
         </View>
-
-        {/* Chat bubbles */}
-        {conversation.map((msg, idx) => (
-          <View
-            key={idx}
-            style={[
-              styles.chatBubble,
-              msg.role === "user" ? styles.userBubble : styles.aiBubble,
-            ]}
-          >
-            {msg.role === "ai" && (
-              <View style={styles.sparkle}>
-                <FontAwesome5 name="magic" size={14} color="#555" />
-              </View>
-            )}
-            <Text style={[
-              styles.chatText,
-              msg.role === "user" ? styles.userChatText : styles.aiChatText
-            ]}>
-              {msg.text}
-            </Text>
-          </View>
-        ))}
-
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color="#C426FF" />
-            <Text style={styles.loadingText}>Thinking...</Text>
-          </View>
-        )}
-
-        {/* Suggestions */}
-        {showSuggestions && (
-          <View style={styles.suggestions}>
-            {[
-              "Analyse KPIGREEN stock fundamentally & technically",
-              "How does Trump tariff's affect Indian markets?",
-              "Impact of UK-India FTA deal",
-            ].map((text, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.suggestionButton}
-                onPress={() => handleSuggestionPress(text)}
-              >
-                <Text style={styles.suggestionText}>{text}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </ScrollView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContent: {
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight! + 10 : 50,
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
-    flexGrow: 1,
+    paddingBottom: 20,
   },
   topRow: {
     flexDirection: "row",
@@ -211,11 +222,20 @@ const styles = StyleSheet.create({
     color: "#111",
     marginBottom: 20,
   },
-  card: {
+  inputCard: {
     backgroundColor: "#1a1a1a",
-    borderRadius: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 15,
-    marginBottom: 20,
+    paddingBottom: Platform.OS === "ios" ? 60 : 50,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   cardHeader: {
     flexDirection: "row",
