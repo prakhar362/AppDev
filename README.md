@@ -46,6 +46,8 @@ This repository contains my submission for the **React Native Developer Internsh
 ## 📷 Screenshots
 ![image](https://github.com/user-attachments/assets/565d7438-87f3-43eb-8c47-188f7a7aaaa3)
 ![image](https://github.com/user-attachments/assets/1a1a13b0-e3bf-4ceb-a462-848dc37e6ac8)
+![image](https://github.com/user-attachments/assets/f505a40c-edee-48a4-bf5f-4a1f49be98ce)
+![image](https://github.com/user-attachments/assets/354f71fb-7c4f-4480-b1c1-a6acf4036ff9)
 
 
 ---
@@ -61,5 +63,5 @@ I adopted a sophisticated dark theme, accented with colors that enhance readabil
 
 ---
 ## 📱 Testing Purposes EAS Android Build:
-- Download the apk file from this Link: https://expo.dev/accounts/prakhar362/projects/Xillion/builds/2ff8905b-5425-4ad0-afb7-d97dd30b9cbc
+- Download the apk file from this Link: https://expo.dev/accounts/prakhar362/projects/Xillion/builds/693ebb29-2f64-4db7-a824-5cf18e28b0bb
 - Or Simply download the APK File from this drive link: https://drive.google.com/file/d/1C0JUuHqLxHv9DJCLcAhpG5sTIBcoKuvN/view?usp=sharing
