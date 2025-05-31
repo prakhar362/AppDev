@@ -56,14 +56,6 @@ export default function Chat() {
     }
   };
 
-  const saveChatHistory = async (newHistory: ChatHistory[]) => {
-    try {
-      await AsyncStorage.setItem('chatHistory', JSON.stringify(newHistory));
-      setChatHistory(newHistory);
-    } catch (error) {
-      console.error('Error saving chat history:', error);
-    }
-  };
 
   const handleNewChat = async () => {
     if (conversation.length > 0) {
@@ -80,15 +72,14 @@ export default function Chat() {
         timestamp: Date.now(),
       };
 
-      // Get existing history from AsyncStorage
+      // Getting existing history from AsyncStorage
       try {
         const existingHistory = await AsyncStorage.getItem('chatHistory');
         const currentHistory: ChatHistory[] = existingHistory ? JSON.parse(existingHistory) : [];
         
-        // Add new chat to the beginning of the array
         const updatedHistory = [newChat, ...currentHistory];
         
-        // Save updated history
+        // Save new one
         await AsyncStorage.setItem('chatHistory', JSON.stringify(updatedHistory));
         setChatHistory(updatedHistory);
       } catch (error) {
@@ -96,7 +87,7 @@ export default function Chat() {
       }
     }
 
-    // Reset the current chat
+    // Reset
     setConversation([]);
     setShowSuggestions(true);
     setInputMessage("");
