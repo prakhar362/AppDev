@@ -8,6 +8,7 @@ import {
   Platform,
   StatusBar,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
   MaterialIcons,
@@ -15,17 +16,49 @@ import {
   FontAwesome5,
   Feather,
 } from "@expo/vector-icons";
-import Sidebar from "../components/sidebar"; // Adjust path if needed
+import Sidebar from "../components/sidebar";
+import { getGeminiResponse } from "../lib/gemini"; // ⬅️ Gemini API helper
+
+type Message = {
+  role: "user" | "ai";
+  text: string;
+};
 
 export default function Chat() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [inputMessage, setInputMessage] = useState(""); // New state for Ask Xillion input
+  const [inputMessage, setInputMessage] = useState("");
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (inputMessage.trim()) {
-      console.log("User Query:", inputMessage);
-      setInputMessage("");
+  const handleSend = async () => {
+    if (!inputMessage.trim()) return;
+
+    const newUserMessage: Message = { role: "user", text: inputMessage.trim() };
+    setConversation(prev => [...prev, newUserMessage]);
+    setInputMessage("");
+    setShowSuggestions(false);
+    setIsLoading(true);
+
+    try {
+      const aiReply = await getGeminiResponse(inputMessage.trim());
+      const newAiMessage: Message = { role: "ai", text: aiReply };
+      setConversation(prev => [...prev, newAiMessage]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      const errorMessage: Message = { 
+        role: "ai", 
+        text: "Sorry, I encountered an error. Please try again." 
+      };
+      setConversation(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSuggestionPress = async (text: string) => {
+    setInputMessage(text);
+    setTimeout(() => handleSend(), 100);
   };
 
   return (
@@ -56,7 +89,7 @@ export default function Chat() {
             <Entypo name="chevron-up" size={20} color="white" />
           </View>
 
-          {/* Input Box */}
+          {/* Input */}
           <TextInput
             style={styles.input}
             placeholder="Type your question here..."
@@ -67,6 +100,7 @@ export default function Chat() {
             returnKeyType="send"
           />
 
+          {/* Actions */}
           <View style={styles.actions}>
             <View style={styles.actionItem}>
               <MaterialIcons name="attach-file" size={16} color="white" />
@@ -83,19 +117,54 @@ export default function Chat() {
           </View>
         </View>
 
+        {/* Chat bubbles */}
+        {conversation.map((msg, idx) => (
+          <View
+            key={idx}
+            style={[
+              styles.chatBubble,
+              msg.role === "user" ? styles.userBubble : styles.aiBubble,
+            ]}
+          >
+            {msg.role === "ai" && (
+              <View style={styles.sparkle}>
+                <FontAwesome5 name="magic" size={14} color="#555" />
+              </View>
+            )}
+            <Text style={[
+              styles.chatText,
+              msg.role === "user" ? styles.userChatText : styles.aiChatText
+            ]}>
+              {msg.text}
+            </Text>
+          </View>
+        ))}
+
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#C426FF" />
+            <Text style={styles.loadingText}>Thinking...</Text>
+          </View>
+        )}
+
         {/* Suggestions */}
-        <View style={styles.suggestions}>
-          {[
-            "Analyse KPIGREEN stock fundamentally & technically",
-            "How does Trump tariff's affect Indian markets?",
-            "Impact of UK-India FTA deal",
-          ].map((text, index) => (
-            
-            <TouchableOpacity key={index} style={styles.suggestionButton}>
-              <Text style={styles.suggestionText}>{text}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {showSuggestions && (
+          <View style={styles.suggestions}>
+            {[
+              "Analyse KPIGREEN stock fundamentally & technically",
+              "How does Trump tariff's affect Indian markets?",
+              "Impact of UK-India FTA deal",
+            ].map((text, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.suggestionButton}
+                onPress={() => handleSuggestionPress(text)}
+              >
+                <Text style={styles.suggestionText}>{text}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -193,6 +262,47 @@ const styles = StyleSheet.create({
   },
   suggestionText: {
     color: "#fff",
+    fontSize: 14,
+  },
+  chatBubble: {
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 10,
+    marginBottom: 5,
+    maxWidth: "80%",
+  },
+  userBubble: {
+    backgroundColor: "#000",
+    alignSelf: "flex-end",
+  },
+  aiBubble: {
+    backgroundColor: "#f5f5f5",
+    alignSelf: "flex-start",
+    position: "relative",
+  },
+  chatText: {
+    fontSize: 14,
+  },
+  userChatText: {
+    color: "#fff",
+  },
+  aiChatText: {
+    color: "#000",
+  },
+  sparkle: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    gap: 8,
+  },
+  loadingText: {
+    color: "#C426FF",
     fontSize: 14,
   },
 });
