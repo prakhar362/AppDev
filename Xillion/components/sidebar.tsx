@@ -6,57 +6,67 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 
-export default function Sidebar({ onClose }: { onClose: () => void }) {
+type Message = {
+  role: "user" | "ai";
+  text: string;
+};
+
+type ChatHistory = {
+  id: string;
+  title: string;
+  messages: Message[];
+  timestamp: number;
+};
+
+type SidebarProps = {
+  onClose: () => void;
+  chatHistory: ChatHistory[];
+  onChatSelect: (chat: ChatHistory) => void;
+};
+
+export default function Sidebar({ onClose, chatHistory, onChatSelect }: SidebarProps) {
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.logo}>Xillion</Text>
+        <Text style={styles.title}>Chat History</Text>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Feather name="chevron-left" size={20} color="#111" />
+          <Feather name="x" size={24} color="#000" />
         </TouchableOpacity>
       </View>
 
-      {/* New Chat */}
-      <TouchableOpacity style={styles.newChatButton}>
-        <Text style={styles.newChatText}>＋ New Chat</Text>
-      </TouchableOpacity>
-
-      {/* Divider */}
-      <View style={styles.divider} />
-
-      {/* Recent Chats */}
-      <ScrollView style={styles.chats}>
-        <Text style={styles.sectionTitle}>Recent Chats</Text>
-        <Text style={styles.sectionSubtitle}>Today</Text>
-
-        {[
-          'Fundamental and Technical An...',
-          'Impact of Trump Tariffs on Indi...',
-        ].map((title, index) => (
-          <TouchableOpacity key={index} style={styles.chatItem}>
-            <Text style={styles.chatTitle}>{title}</Text>
-            <Text style={styles.chatTime}>about 2 hours ago</Text>
+      <ScrollView style={styles.chatList}>
+        {chatHistory.map((chat) => (
+          <TouchableOpacity
+            key={chat.id}
+            style={styles.chatItem}
+            onPress={() => onChatSelect(chat)}
+          >
+            <MaterialIcons name="chat" size={20} color="#666" />
+            <View style={styles.chatInfo}>
+              <Text style={styles.chatTitle} numberOfLines={1}>
+                {chat.title}
+              </Text>
+              <Text style={styles.chatDate}>
+                {formatDate(chat.timestamp)}
+              </Text>
+            </View>
           </TouchableOpacity>
         ))}
-
-        <Text style={styles.endMessage}>
-          You have reached the end of your chat history.
-        </Text>
       </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.version}>Xillion AI Assistant v1.0</Text>
-        <TouchableOpacity style={styles.profile}>
-          <View style={styles.avatar} />
-          <Text style={styles.profileName}>Guest</Text>
-          <Feather name="chevron-down" size={16} color="#111" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -64,106 +74,59 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 0,
     top: 0,
+    left: 0,
     bottom: 0,
-    width: 280,
-    backgroundColor: '#f9f9f9',
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    zIndex: 999,
-    borderRightWidth: 1,
-    borderColor: '#ccc',
-    justifyContent: 'space-between',
+    width: '80%',
+    backgroundColor: '#fff',
+    zIndex: 1000,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 20,
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
-  logo: {
+  title: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#111',
+    fontWeight: '600',
+    color: '#000',
   },
   closeButton: {
-    padding: 6,
-    backgroundColor: '#eaeaea',
-    borderRadius: 6,
+    padding: 5,
   },
-  newChatButton: {
-    backgroundColor: '#333',
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  newChatText: {
-    color: '#eee',
-    fontSize: 16,
-  },
-  divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    marginVertical: 20,
-  },
-  chats: {
-    flexGrow: 1,
-  },
-  sectionTitle: {
-    fontWeight: '600',
-    fontSize: 14,
-    marginBottom: 4,
-    color: '#333',
-  },
-  sectionSubtitle: {
-    fontSize: 13,
-    color: '#666',
-    marginBottom: 10,
+  chatList: {
+    flex: 1,
   },
   chatItem: {
-    marginBottom: 16,
-  },
-  chatTitle: {
-    fontSize: 14,
-    color: '#222',
-    fontWeight: '500',
-  },
-  chatTime: {
-    fontSize: 12,
-    color: '#999',
-  },
-  endMessage: {
-    marginTop: 20,
-    fontSize: 12,
-    color: '#888',
-  },
-  footer: {
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    paddingTop: 10,
-    paddingBottom: 20,
-  },
-  version: {
-    fontSize: 11,
-    color: '#999',
-    marginBottom: 10,
-  },
-  profile: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
-  avatar: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: 'linear-gradient(to right, limegreen, dodgerblue)',
-  },
-  profileName: {
-    fontSize: 14,
-    color: '#111',
+  chatInfo: {
+    marginLeft: 10,
     flex: 1,
+  },
+  chatTitle: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 4,
+  },
+  chatDate: {
+    fontSize: 12,
+    color: '#666',
   },
 });

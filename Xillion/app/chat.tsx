@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -17,13 +17,20 @@ import {
   FontAwesome5,
   Feather,
 } from "@expo/vector-icons";
-import Markdown from 'react-native-markdown-display';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sidebar from "../components/sidebar";
-import { getGeminiResponse } from "../lib/gemini"; // ⬅️ Gemini API helper
+import { getGeminiResponse } from "../lib/gemini";
 
 type Message = {
   role: "user" | "ai";
   text: string;
+};
+
+type ChatHistory = {
+  id: string;
+  title: string;
+  messages: Message[];
+  timestamp: number;
 };
 
 export default function Chat() {
@@ -32,6 +39,68 @@ export default function Chat() {
   const [conversation, setConversation] = useState<Message[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+
+  useEffect(() => {
+    loadChatHistory();
+  }, []);
+
+  const loadChatHistory = async () => {
+    try {
+      const history = await AsyncStorage.getItem('chatHistory');
+      if (history) {
+        setChatHistory(JSON.parse(history));
+      }
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
+  };
+
+  const saveChatHistory = async (newHistory: ChatHistory[]) => {
+    try {
+      await AsyncStorage.setItem('chatHistory', JSON.stringify(newHistory));
+      setChatHistory(newHistory);
+    } catch (error) {
+      console.error('Error saving chat history:', error);
+    }
+  };
+
+  const handleNewChat = async () => {
+    if (conversation.length > 0) {
+      // Create a title from the first user message
+      const firstUserMessage = conversation.find(msg => msg.role === "user")?.text || "New Chat";
+      const title = firstUserMessage.length > 30 
+        ? firstUserMessage.substring(0, 30) + "..."
+        : firstUserMessage;
+
+      const newChat: ChatHistory = {
+        id: Date.now().toString(),
+        title,
+        messages: [...conversation],
+        timestamp: Date.now(),
+      };
+
+      // Get existing history from AsyncStorage
+      try {
+        const existingHistory = await AsyncStorage.getItem('chatHistory');
+        const currentHistory: ChatHistory[] = existingHistory ? JSON.parse(existingHistory) : [];
+        
+        // Add new chat to the beginning of the array
+        const updatedHistory = [newChat, ...currentHistory];
+        
+        // Save updated history
+        await AsyncStorage.setItem('chatHistory', JSON.stringify(updatedHistory));
+        setChatHistory(updatedHistory);
+      } catch (error) {
+        console.error('Error updating chat history:', error);
+      }
+    }
+
+    // Reset the current chat
+    setConversation([]);
+    setShowSuggestions(true);
+    setInputMessage("");
+  };
 
   const handleSend = async () => {
     if (!inputMessage.trim()) return;
@@ -68,7 +137,17 @@ export default function Chat() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: "#fff" }}
     >
-      {sidebarVisible && <Sidebar onClose={() => setSidebarVisible(false)} />}
+      {sidebarVisible && (
+        <Sidebar 
+          onClose={() => setSidebarVisible(false)} 
+          chatHistory={chatHistory}
+          onChatSelect={(chat) => {
+            setConversation(chat.messages);
+            setShowSuggestions(false);
+            setSidebarVisible(false);
+          }}
+        />
+      )}
 
       <View style={styles.mainContainer}>
         <ScrollView 
@@ -80,7 +159,10 @@ export default function Chat() {
             <TouchableOpacity onPress={() => setSidebarVisible(true)} style={styles.iconBox}>
               <Feather name="sidebar" size={20} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.newChatButton}>
+            <TouchableOpacity 
+              style={styles.newChatButton}
+              onPress={handleNewChat}
+            >
               <Feather name="plus" size={16} color="#000" />
               <Text style={styles.newChatText}>New Chat</Text>
             </TouchableOpacity>
